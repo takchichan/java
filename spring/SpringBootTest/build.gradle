@@ -1,0 +1,59 @@
+plugins {
+    id "org.springframework.boot" version "2.2.4.RELEASE"
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'war'
+}
+
+group = 'demo.takchi.chan'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+// 开启war任务 
+war {
+    enabled = true
+}
+
+// 修改bootWar的文件名称 , 这一步是为了区分可执行 war与正常war
+bootWar {
+    classifier = 'boot'
+}
+
+ext {
+  set('springCloudVersion', "Hoxton.SR1")
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+	implementation 'org.springframework.cloud:spring-cloud-starter-zookeeper-discovery'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient'
+    compile group: 'com.netflix.feign', name: 'feign-httpclient', version: '8.17.0'
+}
+
+configurations {
+	providedRuntime
+	all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+test {
+	useJUnitPlatform()
+}

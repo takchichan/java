@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: SpringBootTestConsumer
+  cloud:
+    zookeeper:
+      connect-string: localhost:2181
+      discovery:
+        enabled: true
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+       percentage: 1
+server:
+  port: 8082
+endpoints:
+  restart:
+    enabled: true
+logging:
+  level:
+    org.apache.zookeeper.ClientCnxn: WARN
+management:
+   endpoints:
+      web:
+         exposure:
+            include: "*"
+
+feign:
+   httpclient:
+      enabled: true
+   okhttp:
+      enabled: false
